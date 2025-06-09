@@ -2,10 +2,55 @@
 <html>
 <head>
     <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .oculos-list { display: flex; flex-wrap: wrap; gap: 20px; }
+        .oculo-card { border: 1px solid #ddd; padding: 15px; width: 250px; }
+        .carrinho { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
+        .carrinho-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .flash-messages { color: green; margin-bottom: 20px; }
+        .error { color: red; }
+    </style>
 </head>
 <body>
     <h1>Bem-vindo ao Dashboard!</h1>
-    <p>Você está logado.</p>
-    <a href="{{ url_for('logout') }}">Sair</a>
+    <p>Você está logado. <a href="{{ url_for('logout') }}">Sair</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <h2>Óculos Disponíveis</h2>
+    <div class="oculos-list">
+        {% for oculo in oculos %}
+        <div class="oculo-card">
+            <h3>{{ oculo.nome }}</h3>
+            <p>R$ {{ "%.2f"|format(oculo.preco) }}</p>
+            <p>{{ oculo.descricao }}</p>
+            <a href="{{ url_for('add_carrinho', oculos_id=oculo.id) }}">Adicionar ao Carrinho</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="carrinho">
+        <h2>Seu Carrinho</h2>
+        {% if carrinho %}
+            {% for item in carrinho %}
+            <div class="carrinho-item">
+                <span>{{ item.nome }} - R$ {{ "%.2f"|format(item.preco) }}</span>
+                <a href="{{ url_for('remover_item', index=loop.index0) }}">Remover</a>
+            </div>
+            {% endfor %}
+            <p><strong>Total: R$ {{ "%.2f"|format(carrinho|sum(attribute='preco')) }}</strong></p>
+        {% else %}
+            <p>Seu carrinho está vazio.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

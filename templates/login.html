@@ -6,21 +6,21 @@
 <body>
     <h1>Login</h1>
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-          {% for msg in messages %}
-            <li>{{ msg }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
     {% endwith %}
-    <form method="POST" action="{{ url_for('login') }}">
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
-        <label>Senha:</label><br>
-        <input type="password" name="senha" required><br><br>
+    <form method="POST">
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
+        <label>Senha:</label>
+        <input type="password" name="senha" required><br>
         <button type="submit">Entrar</button>
     </form>
-    <p>Não tem cadastro? <a href="{{ url_for('register') }}">Cadastre-se aqui</a></p>
+    <p>Não tem conta? <a href="{{ url_for('register') }}">Registre-se</a></p>
 </body>
 </html>
